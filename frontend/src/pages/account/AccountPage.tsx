@@ -51,7 +51,7 @@ function AccountPage() {
                 </p>
 
                 <Link
-                  to={`/order-confirmation/${order.id}`}
+                  to={`/order-details/${order.id}`}
                 >
                   View Order
                 </Link>

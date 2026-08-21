@@ -7,6 +7,7 @@ import ProductDetailsPage from '../pages/product-details/ProductDetailsPage'
 import CartPage from '../pages/cart/CartPage'
 import CheckoutPage from '../pages/checkout/CheckoutPage'
 import OrderConfirmationPage from '../pages/order-confirmation/OrderConfirmationPage'
+import OrderDetailsPage from '../pages/order-details/OrderDetailsPage'
 import AccountPage from '../pages/account/AccountPage'
 import NotFoundPage from '../pages/not-found/NotFoundPage'
 
@@ -44,6 +45,11 @@ function App() {
             <Route
               path="/order-confirmation/:orderId"
               element={<OrderConfirmationPage />}
+            />
+
+            <Route
+              path="/order-details/:orderId"
+              element={<OrderDetailsPage />}
             />
 
             <Route
