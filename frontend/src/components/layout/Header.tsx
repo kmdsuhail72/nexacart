@@ -1,17 +1,19 @@
+﻿import { Link } from 'react-router-dom'
+
 function Header() {
   return (
     <header>
       <div>
-        <a href="/" aria-label="NexaCart home">
+        <Link to="/" aria-label="NexaCart home">
           NexaCart
-        </a>
+        </Link>
       </div>
 
       <nav aria-label="Primary navigation">
-        <a href="/">Home</a>
-        <a href="/products">Products</a>
-        <a href="/cart">Cart</a>
-        <a href="/account">Account</a>
+        <Link to="/">Home</Link>
+        <Link to="/products">Products</Link>
+        <Link to="/cart">Cart</Link>
+        <Link to="/account">Account</Link>
       </nav>
     </header>
   )
