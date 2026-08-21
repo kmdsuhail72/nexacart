@@ -1,4 +1,5 @@
-﻿import Button from '../ui/Button'
+﻿import { Link } from 'react-router-dom'
+import Button from '../ui/Button'
 import { useCart } from '../../hooks/useCart'
 
 function CartSummary() {
@@ -20,12 +21,20 @@ function CartSummary() {
         Total: INR {cartTotal.toLocaleString('en-IN')}
       </p>
 
-      <Button
-        onClick={clearCart}
-        disabled={cartCount === 0}
-      >
-        Clear Cart
-      </Button>
+      <div>
+        <Button
+          onClick={clearCart}
+          disabled={cartCount === 0}
+        >
+          Clear Cart
+        </Button>
+
+        {cartCount > 0 && (
+          <Link to="/checkout">
+            Proceed to Checkout
+          </Link>
+        )}
+      </div>
     </aside>
   )
 }
