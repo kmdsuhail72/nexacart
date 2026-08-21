@@ -3,6 +3,7 @@ import MainLayout from '../components/layout/MainLayout'
 import { CartProvider } from '../context/CartContext'
 import HomePage from '../pages/home/HomePage'
 import ProductsPage from '../pages/products/ProductsPage'
+import ProductDetailsPage from '../pages/product-details/ProductDetailsPage'
 import CartPage from '../pages/cart/CartPage'
 import AccountPage from '../pages/account/AccountPage'
 import NotFoundPage from '../pages/not-found/NotFoundPage'
@@ -15,6 +16,10 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/products" element={<ProductsPage />} />
+            <Route
+              path="/products/:productId"
+              element={<ProductDetailsPage />}
+            />
             <Route path="/cart" element={<CartPage />} />
             <Route path="/account" element={<AccountPage />} />
             <Route path="*" element={<NotFoundPage />} />

@@ -1,4 +1,5 @@
-﻿import type { Product } from '../../types/product'
+﻿import { Link } from 'react-router-dom'
+import type { Product } from '../../types/product'
 import Button from '../ui/Button'
 
 interface ProductCardProps {
@@ -28,12 +29,18 @@ function ProductCard({ product, onAddToCart }: ProductCardProps) {
             : `${product.stock} items available`}
         </p>
 
-        <Button
-          disabled={isOutOfStock}
-          onClick={() => onAddToCart(product)}
-        >
-          {isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
-        </Button>
+        <div>
+          <Link to={`/products/${product.id}`}>
+            View Details
+          </Link>
+
+          <Button
+            disabled={isOutOfStock}
+            onClick={() => onAddToCart(product)}
+          >
+            {isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
+          </Button>
+        </div>
       </div>
     </article>
   )
