@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+﻿import type { ReactNode } from 'react'
 import Header from './Header'
 import Footer from './Footer'
 
@@ -8,15 +8,15 @@ interface MainLayoutProps {
 
 function MainLayout({ children }: MainLayoutProps) {
   return (
-    <>
+    <div className="app-shell">
       <Header />
 
-      <main>
+      <main className="app-content">
         {children}
       </main>
 
       <Footer />
-    </>
+    </div>
   )
 }
 
