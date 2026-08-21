@@ -1,32 +1,55 @@
-﻿import { useState } from 'react'
+﻿import { useMemo, useState } from 'react'
 import ProductCard from '../../components/product/ProductCard'
 import { products } from '../../data/products'
-import type { Product } from '../../types/product'
+import { useCart } from '../../hooks/useCart'
 
 function ProductsPage() {
-  const [cart, setCart] = useState<Product[]>([])
+  const { addToCart } = useCart()
+  const [category, setCategory] = useState('All')
 
-  function handleAddToCart(product: Product) {
-    setCart((currentCart) => [...currentCart, product])
-  }
+  const categories = useMemo(
+    () => ['All', ...new Set(products.map((product) => product.category))],
+    [],
+  )
+
+  const filteredProducts =
+    category === 'All'
+      ? products
+      : products.filter((product) => product.category === category)
 
   return (
     <section>
-      <h1>Products</h1>
+      <div>
+        <h1>Shop Products</h1>
+        <p>Discover products available on NexaCart.</p>
+      </div>
 
-      <p>
-        Products in cart: {cart.length}
-      </p>
+      <nav aria-label="Product categories">
+        {categories.map((item) => (
+          <button
+            key={item}
+            type="button"
+            onClick={() => setCategory(item)}
+            aria-pressed={category === item}
+          >
+            {item}
+          </button>
+        ))}
+      </nav>
 
       <div>
-        {products.map((product) => (
+        {filteredProducts.map((product) => (
           <ProductCard
             key={product.id}
             product={product}
-            onAddToCart={handleAddToCart}
+            onAddToCart={addToCart}
           />
         ))}
       </div>
+
+      {filteredProducts.length === 0 && (
+        <p>No products found in this category.</p>
+      )}
     </section>
   )
 }
