@@ -16,7 +16,10 @@ function App() {
       <CartProvider>
         <MainLayout>
           <Routes>
-            <Route path="/" element={<HomePage />} />
+            <Route
+              path="/"
+              element={<HomePage />}
+            />
 
             <Route
               path="/products"
@@ -39,7 +42,7 @@ function App() {
             />
 
             <Route
-              path="/order-confirmation"
+              path="/order-confirmation/:orderId"
               element={<OrderConfirmationPage />}
             />
 

@@ -3,6 +3,8 @@ import { useState } from 'react'
 import { useCart } from '../../hooks/useCart'
 import type { CheckoutData } from '../../types/checkout'
 import Button from '../../components/ui/Button'
+import { createOrder } from '../../services/orderService'
+import type { Order } from '../../types/order'
 
 const initialCheckoutData: CheckoutData = {
   customer: {
@@ -23,7 +25,13 @@ const initialCheckoutData: CheckoutData = {
 
 function CheckoutPage() {
   const navigate = useNavigate()
-  const { items, cartCount, cartTotal } = useCart()
+
+  const {
+    items,
+    cartCount,
+    cartTotal,
+    clearCart,
+  } = useCart()
 
   const [formData, setFormData] =
     useState<CheckoutData>(initialCheckoutData)
@@ -64,10 +72,27 @@ function CheckoutPage() {
     }))
   }
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(
+    event: React.FormEvent<HTMLFormElement>,
+  ) {
     event.preventDefault()
 
-    navigate('/order-confirmation')
+    const order: Order = {
+      id: `NEXA-${Date.now()}`,
+      customer: formData.customer,
+      shipping: formData.shipping,
+      items,
+      totalItems: cartCount,
+      totalAmount: cartTotal,
+      status: 'CONFIRMED',
+      createdAt: new Date().toISOString(),
+    }
+
+    createOrder(order)
+
+    clearCart()
+
+    navigate(`/order-confirmation/${order.id}`)
   }
 
   return (
@@ -90,7 +115,10 @@ function CheckoutPage() {
               required
               value={formData.customer.firstName}
               onChange={(event) =>
-                updateCustomer('firstName', event.target.value)
+                updateCustomer(
+                  'firstName',
+                  event.target.value,
+                )
               }
             />
           </div>
@@ -102,7 +130,10 @@ function CheckoutPage() {
               required
               value={formData.customer.lastName}
               onChange={(event) =>
-                updateCustomer('lastName', event.target.value)
+                updateCustomer(
+                  'lastName',
+                  event.target.value,
+                )
               }
             />
           </div>
@@ -115,7 +146,10 @@ function CheckoutPage() {
               required
               value={formData.customer.email}
               onChange={(event) =>
-                updateCustomer('email', event.target.value)
+                updateCustomer(
+                  'email',
+                  event.target.value,
+                )
               }
             />
           </div>
@@ -128,7 +162,10 @@ function CheckoutPage() {
               required
               value={formData.customer.phone}
               onChange={(event) =>
-                updateCustomer('phone', event.target.value)
+                updateCustomer(
+                  'phone',
+                  event.target.value,
+                )
               }
             />
           </div>
@@ -138,13 +175,18 @@ function CheckoutPage() {
           <legend>Shipping Address</legend>
 
           <div>
-            <label htmlFor="addressLine1">Address</label>
+            <label htmlFor="addressLine1">
+              Address
+            </label>
             <input
               id="addressLine1"
               required
               value={formData.shipping.addressLine1}
               onChange={(event) =>
-                updateShipping('addressLine1', event.target.value)
+                updateShipping(
+                  'addressLine1',
+                  event.target.value,
+                )
               }
             />
           </div>
@@ -157,7 +199,10 @@ function CheckoutPage() {
               id="addressLine2"
               value={formData.shipping.addressLine2}
               onChange={(event) =>
-                updateShipping('addressLine2', event.target.value)
+                updateShipping(
+                  'addressLine2',
+                  event.target.value,
+                )
               }
             />
           </div>
@@ -169,7 +214,10 @@ function CheckoutPage() {
               required
               value={formData.shipping.city}
               onChange={(event) =>
-                updateShipping('city', event.target.value)
+                updateShipping(
+                  'city',
+                  event.target.value,
+                )
               }
             />
           </div>
@@ -181,19 +229,27 @@ function CheckoutPage() {
               required
               value={formData.shipping.state}
               onChange={(event) =>
-                updateShipping('state', event.target.value)
+                updateShipping(
+                  'state',
+                  event.target.value,
+                )
               }
             />
           </div>
 
           <div>
-            <label htmlFor="postalCode">Postal Code</label>
+            <label htmlFor="postalCode">
+              Postal Code
+            </label>
             <input
               id="postalCode"
               required
               value={formData.shipping.postalCode}
               onChange={(event) =>
-                updateShipping('postalCode', event.target.value)
+                updateShipping(
+                  'postalCode',
+                  event.target.value,
+                )
               }
             />
           </div>
@@ -205,7 +261,10 @@ function CheckoutPage() {
               required
               value={formData.shipping.country}
               onChange={(event) =>
-                updateShipping('country', event.target.value)
+                updateShipping(
+                  'country',
+                  event.target.value,
+                )
               }
             />
           </div>
@@ -217,12 +276,13 @@ function CheckoutPage() {
           <p>Total items: {cartCount}</p>
 
           <p>
-            Total: INR {cartTotal.toLocaleString('en-IN')}
+            Total: INR{' '}
+            {cartTotal.toLocaleString('en-IN')}
           </p>
         </aside>
 
         <Button type="submit">
-          Continue to Order Confirmation
+          Place Order
         </Button>
       </form>
     </section>
