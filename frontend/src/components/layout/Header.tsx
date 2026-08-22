@@ -1,14 +1,8 @@
-﻿import { NavLink, Link } from 'react-router-dom'
-import { useState } from 'react'
+﻿import { Link, NavLink } from 'react-router-dom'
 import { useCart } from '../../hooks/useCart'
 
 function Header() {
   const { cartCount } = useCart()
-  const [mobileOpen, setMobileOpen] = useState(false)
-
-  function closeMobileMenu() {
-    setMobileOpen(false)
-  }
 
   return (
     <header className="site-header">
@@ -17,7 +11,6 @@ function Header() {
           to="/"
           className="site-logo"
           aria-label="NexaCart home"
-          onClick={closeMobileMenu}
         >
           <span className="site-logo-mark">N</span>
 
@@ -27,20 +20,15 @@ function Header() {
         </Link>
 
         <nav
-          className={`site-nav ${
-            mobileOpen ? 'site-nav-open' : ''
-          }`}
+          className="site-nav"
           aria-label="Primary navigation"
         >
           <NavLink
             to="/"
             end
             className={({ isActive }) =>
-              isActive
-                ? 'nav-link nav-link-active'
-                : 'nav-link'
+              isActive ? 'active' : ''
             }
-            onClick={closeMobileMenu}
           >
             Home
           </NavLink>
@@ -48,98 +36,35 @@ function Header() {
           <NavLink
             to="/products"
             className={({ isActive }) =>
-              isActive
-                ? 'nav-link nav-link-active'
-                : 'nav-link'
+              isActive ? 'active' : ''
             }
-            onClick={closeMobileMenu}
           >
             Products
           </NavLink>
 
           <NavLink
-            to="/account"
+            to="/cart"
             className={({ isActive }) =>
-              isActive
-                ? 'nav-link nav-link-active'
-                : 'nav-link'
+              isActive ? 'active' : ''
             }
-            onClick={closeMobileMenu}
           >
-            Account
+            Cart
+            {cartCount > 0 && (
+              <span className="nav-cart-count">
+                {cartCount}
+              </span>
+            )}
           </NavLink>
 
           <NavLink
-            to="/cart"
+            to="/account"
             className={({ isActive }) =>
-              isActive
-                ? 'nav-link nav-link-cart nav-link-active'
-                : 'nav-link nav-link-cart'
+              isActive ? 'active' : ''
             }
-            onClick={closeMobileMenu}
           >
-            <span>Cart</span>
-
-            {cartCount > 0 && (
-              <span
-                className="cart-badge"
-                aria-label={`${cartCount} items in cart`}
-              >
-                {cartCount > 99
-                  ? '99+'
-                  : cartCount}
-              </span>
-            )}
+            Account
           </NavLink>
         </nav>
-
-        <div className="site-header-actions">
-          <Link
-            to="/account"
-            className="header-account-link"
-            aria-label="My Account"
-          >
-            <span className="header-account-icon">
-              ♙
-            </span>
-
-            <span>Account</span>
-          </Link>
-
-          <Link
-            to="/cart"
-            className="header-cart-link"
-            aria-label={`Shopping cart with ${cartCount} items`}
-          >
-            <span>Cart</span>
-
-            {cartCount > 0 && (
-              <span className="cart-badge">
-                {cartCount > 99
-                  ? '99+'
-                  : cartCount}
-              </span>
-            )}
-          </Link>
-        </div>
-
-        <button
-          type="button"
-          className="mobile-menu-button"
-          aria-label={
-            mobileOpen
-              ? 'Close navigation'
-              : 'Open navigation'
-          }
-          aria-expanded={mobileOpen}
-          onClick={() =>
-            setMobileOpen((current) => !current)
-          }
-        >
-          <span />
-          <span />
-          <span />
-        </button>
       </div>
     </header>
   )
