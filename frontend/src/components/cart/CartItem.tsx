@@ -1,5 +1,6 @@
-﻿import type { CartItem as CartItemType } from '../../context/CartContext'
-import Button from '../ui/Button'
+﻿import type {
+  CartItem as CartItemType,
+} from '../../context/CartContext'
 import { useCart } from '../../hooks/useCart'
 
 interface CartItemProps {
@@ -28,69 +29,76 @@ function CartItem({ item }: CartItemProps) {
 
       <div className="cart-item-content">
         <div className="cart-item-main">
-          <div>
-            <span className="cart-item-category">
-              {product.category}
-            </span>
+          <span className="cart-item-category">
+            {product.category}
+          </span>
 
-            <h2>{product.name}</h2>
+          <h2>
+            {product.name}
+          </h2>
 
-            <p>
-              {product.description}
-            </p>
-          </div>
+          <p>
+            {product.description}
+          </p>
 
           <strong className="cart-item-price">
             {product.currency}{' '}
-            {product.price.toLocaleString(
-              'en-IN',
-            )}
+            {product.price.toLocaleString('en-IN')}
           </strong>
         </div>
 
-        <div className="cart-item-footer">
-          <div className="cart-quantity">
+        <div className="cart-item-controls">
+          <div
+            className="quantity-control"
+            aria-label={`Quantity for ${product.name}`}
+          >
             <button
               type="button"
+              aria-label="Decrease quantity"
+              disabled={quantity <= 1}
               onClick={() =>
                 decreaseQuantity(product.id)
               }
-              disabled={quantity <= 1}
-              aria-label={`Decrease ${product.name} quantity`}
             >
               −
             </button>
 
-            <span>{quantity}</span>
+            <span>
+              {quantity}
+            </span>
 
             <button
               type="button"
+              aria-label="Increase quantity"
+              disabled={
+                quantity >= product.stock
+              }
               onClick={() =>
                 increaseQuantity(product.id)
               }
-              aria-label={`Increase ${product.name} quantity`}
             >
               +
             </button>
           </div>
 
-          <div className="cart-item-actions">
-            <strong>
-              INR{' '}
-              {itemTotal.toLocaleString(
-                'en-IN',
-              )}
-            </strong>
+          <button
+            type="button"
+            className="cart-remove"
+            onClick={() =>
+              removeFromCart(product.id)
+            }
+          >
+            Remove
+          </button>
+        </div>
 
-            <Button
-              variant="secondary"
-              onClick={() =>
-                removeFromCart(product.id)
-              }
-            >
-              Remove
-            </Button>
-          </div>
+        <div className="cart-item-total">
+          <span>Item total</span>
+
+          <strong>
+            {product.currency}{' '}
+            {itemTotal.toLocaleString('en-IN')}
+          </strong>
         </div>
       </div>
     </article>

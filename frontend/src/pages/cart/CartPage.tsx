@@ -20,15 +20,15 @@ function CartPage() {
         <h1>Your cart is empty</h1>
 
         <p>
-          Looks like you haven't added anything
-          to your cart yet.
+          You haven't added anything to your cart yet.
+          Explore our products and find something you love.
         </p>
 
         <Link
           to="/products"
           className="button"
         >
-          Start Shopping
+          Browse Products
         </Link>
       </section>
     )
@@ -45,15 +45,18 @@ function CartPage() {
           <h1>Your Cart</h1>
 
           <p>
-            Review your items before continuing
-            to checkout.
+            {cartCount}{' '}
+            {cartCount === 1 ? 'item' : 'items'}{' '}
+            ready for checkout.
           </p>
         </div>
 
-        <span className="cart-count">
-          {cartCount}{' '}
-          {cartCount === 1 ? 'item' : 'items'}
-        </span>
+        <Link
+          to="/products"
+          className="button button-secondary"
+        >
+          Continue Shopping
+        </Link>
       </div>
 
       <div className="cart-layout">
@@ -64,13 +67,6 @@ function CartPage() {
               item={item}
             />
           ))}
-
-          <Link
-            to="/products"
-            className="cart-continue"
-          >
-            ← Continue Shopping
-          </Link>
         </div>
 
         <CartSummary />

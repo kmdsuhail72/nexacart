@@ -11,16 +11,20 @@ function CartSummary() {
 
   return (
     <aside className="cart-summary">
-      <div className="cart-summary-header">
+      <div>
         <span className="section-eyebrow">
           Summary
         </span>
 
-        <h2>Order Summary</h2>
+        <h2>
+          Order Summary
+        </h2>
       </div>
 
       <div className="cart-summary-row">
-        <span>Items</span>
+        <span>
+          Items
+        </span>
 
         <strong>
           {cartCount}
@@ -28,18 +32,19 @@ function CartSummary() {
       </div>
 
       <div className="cart-summary-row">
-        <span>Subtotal</span>
+        <span>
+          Subtotal
+        </span>
 
         <strong>
-          INR{' '}
-          {cartTotal.toLocaleString(
-            'en-IN',
-          )}
+          INR {cartTotal.toLocaleString('en-IN')}
         </strong>
       </div>
 
       <div className="cart-summary-row">
-        <span>Delivery</span>
+        <span>
+          Delivery
+        </span>
 
         <strong className="cart-free">
           FREE
@@ -47,13 +52,12 @@ function CartSummary() {
       </div>
 
       <div className="cart-summary-total">
-        <span>Total</span>
+        <span>
+          Total
+        </span>
 
         <strong>
-          INR{' '}
-          {cartTotal.toLocaleString(
-            'en-IN',
-          )}
+          INR {cartTotal.toLocaleString('en-IN')}
         </strong>
       </div>
 
@@ -67,15 +71,9 @@ function CartSummary() {
       <Button
         variant="secondary"
         onClick={clearCart}
-        disabled={cartCount === 0}
       >
         Clear Cart
       </Button>
-
-      <p className="cart-summary-note">
-        Taxes and delivery charges are calculated
-        at checkout where applicable.
-      </p>
     </aside>
   )
 }
