@@ -10,37 +10,30 @@ function OrderDetailsPage() {
 
   if (!order) {
     return (
-      <section className="order-details-page">
-        <div className="order-details-not-found">
-          <span className="section-eyebrow">
-            Order
-          </span>
-
-          <h1>Order Not Found</h1>
-
-          <p>
-            We could not find the order you are
-            looking for.
-          </p>
-
-          <Link
-            to="/account"
-            className="button"
-          >
-            Back to My Orders
-          </Link>
+      <section className="order-result order-result-error">
+        <div className="order-result-icon">
+          !
         </div>
+
+        <span className="section-eyebrow">
+          Order Details
+        </span>
+
+        <h1>Order Not Found</h1>
+
+        <p>
+          We could not find the requested order.
+        </p>
+
+        <Link
+          to="/account"
+          className="button"
+        >
+          Back to My Account
+        </Link>
       </section>
     )
   }
-
-  const orderDate = new Date(
-    order.createdAt,
-  ).toLocaleDateString('en-IN', {
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric',
-  })
 
   return (
     <section className="order-details-page">
@@ -53,71 +46,105 @@ function OrderDetailsPage() {
         </Link>
 
         <div className="order-details-heading">
-          <div>
-            <span className="section-eyebrow">
-              Order Details
-            </span>
-
-            <h1>{order.id}</h1>
-
-            <p>
-              Placed on {orderDate}
-            </p>
-          </div>
-
-          <span
-            className={`order-status order-status-${order.status.toLowerCase()}`}
-          >
-            <span className="order-status-dot" />
-
-            {order.status}
+          <span className="section-eyebrow">
+            Order Details
           </span>
+
+          <h1>Your Order</h1>
+
+          <p>
+            Order <strong>{order.id}</strong>
+          </p>
+        </div>
+
+        <div className="order-details-status">
+          <span>Status</span>
+
+          <strong>{order.status}</strong>
         </div>
       </div>
 
       <div className="order-details-layout">
-        <div className="order-details-main">
-          <div className="order-details-card">
-            <div className="order-details-card-header">
+        <main className="order-details-main">
+          <section className="order-card">
+            <div className="order-card-header">
               <div>
                 <span className="section-eyebrow">
-                  Customer
+                  Items
                 </span>
 
-                <h2>Customer Information</h2>
+                <h2>Order Items</h2>
               </div>
+
+              <span className="order-item-count">
+                {order.totalItems}{' '}
+                {order.totalItems === 1
+                  ? 'item'
+                  : 'items'}
+              </span>
             </div>
 
-            <div className="order-details-information">
-              <div>
-                <span>Name</span>
+            <div className="order-items-list">
+              {order.items.map((item) => (
+                <article
+                  key={item.product.id}
+                  className="order-item"
+                >
+                  <div className="order-item-image">
+                    {item.product.name.charAt(0)}
+                  </div>
 
-                <strong>
-                  {order.customer.firstName}{' '}
-                  {order.customer.lastName}
-                </strong>
-              </div>
+                  <div className="order-item-content">
+                    <strong>
+                      {item.product.name}
+                    </strong>
 
-              <div>
-                <span>Email</span>
+                    <span>
+                      {item.product.category}
+                    </span>
 
-                <strong>
-                  {order.customer.email}
-                </strong>
-              </div>
+                    <small>
+                      Qty: {item.quantity}
+                    </small>
+                  </div>
 
-              <div>
-                <span>Phone</span>
+                  <div className="order-item-pricing">
+                    <span>
+                      INR{' '}
+                      {item.product.price.toLocaleString(
+                        'en-IN',
+                      )}{' '}
+                      each
+                    </span>
 
-                <strong>
-                  {order.customer.phone}
-                </strong>
-              </div>
+                    <strong>
+                      INR{' '}
+                      {(
+                        item.product.price *
+                        item.quantity
+                      ).toLocaleString(
+                        'en-IN',
+                      )}
+                    </strong>
+                  </div>
+                </article>
+              ))}
             </div>
-          </div>
 
-          <div className="order-details-card">
-            <div className="order-details-card-header">
+            <div className="order-total-row">
+              <span>Order Total</span>
+
+              <strong>
+                INR{' '}
+                {order.totalAmount.toLocaleString(
+                  'en-IN',
+                )}
+              </strong>
+            </div>
+          </section>
+
+          <section className="order-card">
+            <div className="order-card-header">
               <div>
                 <span className="section-eyebrow">
                   Delivery
@@ -127,7 +154,7 @@ function OrderDetailsPage() {
               </div>
             </div>
 
-            <div className="shipping-address">
+            <div className="order-address">
               <strong>
                 {order.customer.firstName}{' '}
                 {order.customer.lastName}
@@ -153,76 +180,59 @@ function OrderDetailsPage() {
                 {order.shipping.country}
               </p>
             </div>
-          </div>
+          </section>
 
-          <div className="order-details-card">
-            <div className="order-details-card-header">
+          <section className="order-card">
+            <div className="order-card-header">
               <div>
                 <span className="section-eyebrow">
-                  Purchase
+                  Customer
                 </span>
 
-                <h2>Order Items</h2>
+                <h2>Contact Information</h2>
+              </div>
+            </div>
+
+            <div className="order-contact-grid">
+              <div>
+                <span>Name</span>
+
+                <strong>
+                  {order.customer.firstName}{' '}
+                  {order.customer.lastName}
+                </strong>
               </div>
 
-              <span className="order-item-count">
-                {order.totalItems}{' '}
-                {order.totalItems === 1
-                  ? 'item'
-                  : 'items'}
-              </span>
+              <div>
+                <span>Email</span>
+
+                <strong>
+                  {order.customer.email}
+                </strong>
+              </div>
+
+              <div>
+                <span>Phone</span>
+
+                <strong>
+                  {order.customer.phone}
+                </strong>
+              </div>
+
+              <div>
+                <span>Order Date</span>
+
+                <strong>
+                  {new Date(
+                    order.createdAt,
+                  ).toLocaleString('en-IN')}
+                </strong>
+              </div>
             </div>
+          </section>
+        </main>
 
-            <div className="order-items-list">
-              {order.items.map((item) => (
-                <article
-                  key={item.product.id}
-                  className="order-details-item"
-                >
-                  <div className="order-item-visual">
-                    {item.product.name
-                      .charAt(0)
-                      .toUpperCase()}
-                  </div>
-
-                  <div className="order-item-content">
-                    <h3>
-                      {item.product.name}
-                    </h3>
-
-                    <p>
-                      {item.product.category}
-                    </p>
-
-                    <span>
-                      Qty: {item.quantity}
-                    </span>
-                  </div>
-
-                  <div className="order-item-pricing">
-                    <span>
-                      INR{' '}
-                      {item.product.price.toLocaleString(
-                        'en-IN',
-                      )}{' '}
-                      × {item.quantity}
-                    </span>
-
-                    <strong>
-                      INR{' '}
-                      {(
-                        item.product.price *
-                        item.quantity
-                      ).toLocaleString('en-IN')}
-                    </strong>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <aside className="order-details-summary">
+        <aside className="order-details-sidebar">
           <div className="order-summary-card">
             <span className="section-eyebrow">
               Summary
@@ -231,7 +241,7 @@ function OrderDetailsPage() {
             <h2>Order Summary</h2>
 
             <div className="order-summary-row">
-              <span>Total Items</span>
+              <span>Items</span>
 
               <strong>
                 {order.totalItems}
@@ -239,17 +249,12 @@ function OrderDetailsPage() {
             </div>
 
             <div className="order-summary-row">
-              <span>Subtotal</span>
+              <span>Delivery</span>
 
-              <strong>
-                INR{' '}
-                {order.totalAmount.toLocaleString(
-                  'en-IN',
-                )}
+              <strong className="order-free">
+                FREE
               </strong>
             </div>
-
-            <div className="order-summary-divider" />
 
             <div className="order-summary-total">
               <span>Total</span>
@@ -262,25 +267,23 @@ function OrderDetailsPage() {
               </strong>
             </div>
 
-            <div className="order-summary-confirmed">
-              <span className="order-status-dot" />
+            <div className="order-summary-status">
+              <span>✓</span>
 
               <div>
-                <strong>
-                  Order confirmed
-                </strong>
+                <strong>Order confirmed</strong>
 
-                <span>
-                  Your order has been received
-                  successfully.
-                </span>
+                <p>
+                  Your order has been successfully
+                  placed.
+                </p>
               </div>
             </div>
           </div>
 
           <Link
             to="/products"
-            className="button button-secondary order-continue-button"
+            className="button order-shop-button"
           >
             Continue Shopping
           </Link>
