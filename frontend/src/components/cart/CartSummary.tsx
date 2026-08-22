@@ -10,31 +10,72 @@ function CartSummary() {
   } = useCart()
 
   return (
-    <aside>
-      <h2>Cart Summary</h2>
+    <aside className="cart-summary">
+      <div className="cart-summary-header">
+        <span className="section-eyebrow">
+          Summary
+        </span>
 
-      <p>
-        Total items: {cartCount}
-      </p>
-
-      <p>
-        Total: INR {cartTotal.toLocaleString('en-IN')}
-      </p>
-
-      <div>
-        <Button
-          onClick={clearCart}
-          disabled={cartCount === 0}
-        >
-          Clear Cart
-        </Button>
-
-        {cartCount > 0 && (
-          <Link to="/checkout">
-            Proceed to Checkout
-          </Link>
-        )}
+        <h2>Order Summary</h2>
       </div>
+
+      <div className="cart-summary-row">
+        <span>Items</span>
+
+        <strong>
+          {cartCount}
+        </strong>
+      </div>
+
+      <div className="cart-summary-row">
+        <span>Subtotal</span>
+
+        <strong>
+          INR{' '}
+          {cartTotal.toLocaleString(
+            'en-IN',
+          )}
+        </strong>
+      </div>
+
+      <div className="cart-summary-row">
+        <span>Delivery</span>
+
+        <strong className="cart-free">
+          FREE
+        </strong>
+      </div>
+
+      <div className="cart-summary-total">
+        <span>Total</span>
+
+        <strong>
+          INR{' '}
+          {cartTotal.toLocaleString(
+            'en-IN',
+          )}
+        </strong>
+      </div>
+
+      <Link
+        to="/checkout"
+        className="button cart-checkout-button"
+      >
+        Proceed to Checkout
+      </Link>
+
+      <Button
+        variant="secondary"
+        onClick={clearCart}
+        disabled={cartCount === 0}
+      >
+        Clear Cart
+      </Button>
+
+      <p className="cart-summary-note">
+        Taxes and delivery charges are calculated
+        at checkout where applicable.
+      </p>
     </aside>
   )
 }

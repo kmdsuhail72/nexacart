@@ -15,45 +15,83 @@ function CartItem({ item }: CartItemProps) {
 
   const { product, quantity } = item
 
+  const itemTotal =
+    product.price * quantity
+
   return (
-    <article>
-      <div>
-        <h2>{product.name}</h2>
+    <article className="cart-item">
+      <div className="cart-item-visual">
+        <span>
+          {product.name.charAt(0)}
+        </span>
+      </div>
 
-        <p>{product.description}</p>
+      <div className="cart-item-content">
+        <div className="cart-item-main">
+          <div>
+            <span className="cart-item-category">
+              {product.category}
+            </span>
 
-        <p>
-          {product.currency}{' '}
-          {product.price.toLocaleString('en-IN')}
-        </p>
+            <h2>{product.name}</h2>
 
-        <div>
-          <Button
-            onClick={() => decreaseQuantity(product.id)}
-          >
-            -
-          </Button>
+            <p>
+              {product.description}
+            </p>
+          </div>
 
-          <span>{quantity}</span>
-
-          <Button
-            onClick={() => increaseQuantity(product.id)}
-          >
-            +
-          </Button>
-
-          <Button
-            onClick={() => removeFromCart(product.id)}
-          >
-            Remove
-          </Button>
+          <strong className="cart-item-price">
+            {product.currency}{' '}
+            {product.price.toLocaleString(
+              'en-IN',
+            )}
+          </strong>
         </div>
 
-        <p>
-          Item total:{' '}
-          {product.currency}{' '}
-          {(product.price * quantity).toLocaleString('en-IN')}
-        </p>
+        <div className="cart-item-footer">
+          <div className="cart-quantity">
+            <button
+              type="button"
+              onClick={() =>
+                decreaseQuantity(product.id)
+              }
+              disabled={quantity <= 1}
+              aria-label={`Decrease ${product.name} quantity`}
+            >
+              −
+            </button>
+
+            <span>{quantity}</span>
+
+            <button
+              type="button"
+              onClick={() =>
+                increaseQuantity(product.id)
+              }
+              aria-label={`Increase ${product.name} quantity`}
+            >
+              +
+            </button>
+          </div>
+
+          <div className="cart-item-actions">
+            <strong>
+              INR{' '}
+              {itemTotal.toLocaleString(
+                'en-IN',
+              )}
+            </strong>
+
+            <Button
+              variant="secondary"
+              onClick={() =>
+                removeFromCart(product.id)
+              }
+            >
+              Remove
+            </Button>
+          </div>
+        </div>
       </div>
     </article>
   )
