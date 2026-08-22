@@ -17,47 +17,46 @@ function ProductCard({
     <article className="product-card">
       <Link
         to={`/products/${product.id}`}
-        className="product-card-image"
+        className="product-card-visual"
         aria-label={`View ${product.name}`}
       >
         <span className="product-card-category">
           {product.category}
         </span>
 
-        <span className="product-card-placeholder">
-          {product.name.charAt(0)}
-        </span>
+        <div className="product-card-placeholder">
+          {product.name
+            .charAt(0)
+            .toUpperCase()}
+        </div>
       </Link>
 
       <div className="product-card-content">
-        <span className="product-card-eyebrow">
-          {product.category}
-        </span>
+        <div>
+          <h2>
+            <Link
+              to={`/products/${product.id}`}
+            >
+              {product.name}
+            </Link>
+          </h2>
 
-        <Link
-          to={`/products/${product.id}`}
-          className="product-card-title"
-        >
-          {product.name}
-        </Link>
-
-        <p className="product-card-description">
-          {product.description}
-        </p>
+          <p className="product-card-description">
+            {product.description}
+          </p>
+        </div>
 
         <div className="product-card-meta">
           <strong className="product-card-price">
             {product.currency}{' '}
-            {product.price.toLocaleString(
-              'en-IN',
-            )}
+            {product.price.toLocaleString('en-IN')}
           </strong>
 
           <span
             className={
               isOutOfStock
-                ? 'product-stock product-stock-empty'
-                : 'product-stock'
+                ? 'stock-label stock-label-out'
+                : 'stock-label'
             }
           >
             {isOutOfStock
@@ -67,23 +66,21 @@ function ProductCard({
         </div>
 
         <div className="product-card-actions">
+          <Link
+            to={`/products/${product.id}`}
+            className="button button-secondary"
+          >
+            View Details
+          </Link>
+
           <Button
             disabled={isOutOfStock}
-            onClick={() =>
-              onAddToCart(product)
-            }
+            onClick={() => onAddToCart(product)}
           >
             {isOutOfStock
               ? 'Out of Stock'
               : 'Add to Cart'}
           </Button>
-
-          <Link
-            to={`/products/${product.id}`}
-            className="product-view-link"
-          >
-            View Details
-          </Link>
         </div>
       </div>
     </article>

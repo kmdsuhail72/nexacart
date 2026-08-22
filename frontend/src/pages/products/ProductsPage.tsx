@@ -6,84 +6,114 @@ import { useCart } from '../../hooks/useCart'
 
 function ProductsPage() {
   const { addToCart } = useCart()
+
   const [category, setCategory] = useState('All')
+  const [search, setSearch] = useState('')
 
   const categories = useMemo(
     () => [
       'All',
       ...new Set(
-        products.map(
-          (product) => product.category,
-        ),
+        products.map((product) => product.category),
       ),
     ],
     [],
   )
 
-  const filteredProducts =
-    category === 'All'
-      ? products
-      : products.filter(
-          (product) =>
-            product.category === category,
-        )
+  const filteredProducts = useMemo(() => {
+    const normalizedSearch = search
+      .trim()
+      .toLowerCase()
+
+    return products.filter((product) => {
+      const matchesCategory =
+        category === 'All' ||
+        product.category === category
+
+      const matchesSearch =
+        normalizedSearch === '' ||
+        product.name
+          .toLowerCase()
+          .includes(normalizedSearch) ||
+        product.description
+          .toLowerCase()
+          .includes(normalizedSearch)
+
+      return matchesCategory && matchesSearch
+    })
+  }, [category, search])
 
   return (
     <section className="products-page">
       <div className="products-header">
         <div>
           <span className="section-eyebrow">
-            NexaCart Collection
+            NexaCart Store
           </span>
 
           <h1>Shop Products</h1>
 
           <p>
-            Discover quality products selected
-            for your everyday needs.
+            Discover carefully selected products
+            for everyday life.
           </p>
         </div>
 
-        <div className="products-count">
-          <strong>
-            {filteredProducts.length}
-          </strong>
-
-          <span>
-            {filteredProducts.length === 1
-              ? 'product'
-              : 'products'}
-          </span>
-        </div>
+        <Link
+          to="/cart"
+          className="button button-secondary"
+        >
+          View Cart
+        </Link>
       </div>
 
       <div className="products-toolbar">
+        <label className="products-search">
+          <span className="sr-only">
+            Search products
+          </span>
+
+          <input
+            type="search"
+            placeholder="Search products..."
+            value={search}
+            onChange={(event) =>
+              setSearch(event.target.value)
+            }
+          />
+        </label>
+
         <div
-          className="category-filter"
-          role="group"
-          aria-label="Product categories"
+          className="products-count"
+          aria-live="polite"
         >
-          {categories.map((item) => (
-            <button
-              key={item}
-              type="button"
-              className={
-                category === item
-                  ? 'category-filter-active'
-                  : ''
-              }
-              onClick={() =>
-                setCategory(item)
-              }
-              aria-pressed={
-                category === item
-              }
-            >
-              {item}
-            </button>
-          ))}
+          {filteredProducts.length}{' '}
+          {filteredProducts.length === 1
+            ? 'product'
+            : 'products'}
         </div>
       </div>
+
+      <nav
+        className="product-categories"
+        aria-label="Product categories"
+      >
+        {categories.map((item) => (
+          <button
+            key={item}
+            type="button"
+            className={
+              category === item
+                ? 'category-button category-button-active'
+                : 'category-button'
+            }
+            onClick={() => setCategory(item)}
+            aria-pressed={category === item}
+          >
+            {item}
+          </button>
+        ))}
+      </nav>
 
       {filteredProducts.length > 0 ? (
         <div className="products-grid">
@@ -97,37 +127,28 @@ function ProductsPage() {
         </div>
       ) : (
         <div className="products-empty">
-          <span className="products-empty-icon">
-            —
-          </span>
+          <div className="products-empty-icon">
+            ×
+          </div>
 
           <h2>No products found</h2>
 
           <p>
-            There are currently no products in
-            this category.
+            Try a different search term or category.
           </p>
 
           <button
             type="button"
-            className="button button-secondary"
-            onClick={() =>
+            className="button"
+            onClick={() => {
+              setSearch('')
               setCategory('All')
-            }
+            }}
           >
-            View All Products
+            Clear Filters
           </button>
         </div>
       )}
-
-      <div className="products-footer-link">
-        <Link
-          to="/cart"
-          className="text-link"
-        >
-          View your cart →
-        </Link>
-      </div>
     </section>
   )
 }
