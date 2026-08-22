@@ -12,7 +12,9 @@ function ProductsPage() {
     () => [
       'All',
       ...new Set(
-        products.map((product) => product.category),
+        products.map(
+          (product) => product.category,
+        ),
       ),
     ],
     [],
@@ -22,7 +24,8 @@ function ProductsPage() {
     category === 'All'
       ? products
       : products.filter(
-          (product) => product.category === category,
+          (product) =>
+            product.category === category,
         )
 
   return (
@@ -30,37 +33,34 @@ function ProductsPage() {
       <div className="products-header">
         <div>
           <span className="section-eyebrow">
-            NexaCart Store
+            NexaCart Collection
           </span>
 
           <h1>Shop Products</h1>
 
           <p>
-            Discover quality products selected for
-            your everyday needs.
+            Discover quality products selected
+            for your everyday needs.
           </p>
         </div>
 
-        <Link
-          to="/cart"
-          className="button button-secondary"
-        >
-          View Cart
-        </Link>
-      </div>
-
-      <div className="catalog-toolbar">
-        <div>
+        <div className="products-count">
           <strong>
             {filteredProducts.length}
-          </strong>{' '}
-          {filteredProducts.length === 1
-            ? 'product'
-            : 'products'}
-        </div>
+          </strong>
 
-        <nav
+          <span>
+            {filteredProducts.length === 1
+              ? 'product'
+              : 'products'}
+          </span>
+        </div>
+      </div>
+
+      <div className="products-toolbar">
+        <div
           className="category-filter"
+          role="group"
           aria-label="Product categories"
         >
           {categories.map((item) => (
@@ -69,20 +69,24 @@ function ProductsPage() {
               type="button"
               className={
                 category === item
-                  ? 'category-filter-button active'
-                  : 'category-filter-button'
+                  ? 'category-filter-active'
+                  : ''
               }
-              onClick={() => setCategory(item)}
-              aria-pressed={category === item}
+              onClick={() =>
+                setCategory(item)
+              }
+              aria-pressed={
+                category === item
+              }
             >
               {item}
             </button>
           ))}
-        </nav>
+        </div>
       </div>
 
       {filteredProducts.length > 0 ? (
-        <div className="product-grid">
+        <div className="products-grid">
           {filteredProducts.map((product) => (
             <ProductCard
               key={product.id}
@@ -92,23 +96,38 @@ function ProductsPage() {
           ))}
         </div>
       ) : (
-        <div className="empty-state">
+        <div className="products-empty">
+          <span className="products-empty-icon">
+            —
+          </span>
+
           <h2>No products found</h2>
 
           <p>
-            There are currently no products in this
-            category.
+            There are currently no products in
+            this category.
           </p>
 
           <button
             type="button"
-            className="button"
-            onClick={() => setCategory('All')}
+            className="button button-secondary"
+            onClick={() =>
+              setCategory('All')
+            }
           >
             View All Products
           </button>
         </div>
       )}
+
+      <div className="products-footer-link">
+        <Link
+          to="/cart"
+          className="text-link"
+        >
+          View your cart →
+        </Link>
+      </div>
     </section>
   )
 }
