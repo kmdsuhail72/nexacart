@@ -43,8 +43,12 @@ function CheckoutPage() {
     return (
       <section className="checkout-empty">
         <span className="section-eyebrow">
-          Checkout
+          Secure Checkout
         </span>
+
+        <div className="checkout-empty-icon">
+          ✓
+        </div>
 
         <h1>Your cart is empty</h1>
 
@@ -105,15 +109,10 @@ function CheckoutPage() {
         id: orderId,
         createdAt: new Date().toISOString(),
         status: 'CONFIRMED',
-
         customer: formData.customer,
-
         shipping: formData.shipping,
-
         items,
-
         totalItems: cartCount,
-
         totalAmount: cartTotal,
       })
 
@@ -139,16 +138,32 @@ function CheckoutPage() {
           ← Back to Cart
         </Link>
 
-        <span className="section-eyebrow">
-          Secure Checkout
-        </span>
+        <div className="checkout-heading">
+          <span className="section-eyebrow">
+            Secure Checkout
+          </span>
 
-        <h1>Complete Your Order</h1>
+          <h1>Complete Your Order</h1>
 
-        <p>
-          Enter your delivery information to
-          place your NexaCart order.
-        </p>
+          <p>
+            Enter your delivery information to
+            place your NexaCart order.
+          </p>
+        </div>
+
+        <div className="checkout-progress">
+          <div className="checkout-step checkout-step-active">
+            <span>1</span>
+            <strong>Details</strong>
+          </div>
+
+          <div className="checkout-progress-line" />
+
+          <div className="checkout-step">
+            <span>2</span>
+            <strong>Confirmation</strong>
+          </div>
+        </div>
       </div>
 
       {error && (
@@ -156,7 +171,8 @@ function CheckoutPage() {
           className="checkout-error"
           role="alert"
         >
-          {error}
+          <strong>Something went wrong.</strong>
+          <span>{error}</span>
         </div>
       )}
 
@@ -166,11 +182,26 @@ function CheckoutPage() {
       >
         <div className="checkout-form">
           <fieldset>
-            <legend>Customer Information</legend>
+            <div className="checkout-fieldset-heading">
+              <span className="checkout-section-number">
+                01
+              </span>
+
+              <div>
+                <legend>
+                  Customer Information
+                </legend>
+
+                <p>
+                  Tell us how we can contact you
+                  about your order.
+                </p>
+              </div>
+            </div>
 
             <div className="checkout-grid">
               <label>
-                First Name
+                <span>First Name</span>
 
                 <input
                   name="firstName"
@@ -178,12 +209,14 @@ function CheckoutPage() {
                     formData.customer.firstName
                   }
                   onChange={handleCustomerChange}
+                  placeholder="Enter your first name"
+                  autoComplete="given-name"
                   required
                 />
               </label>
 
               <label>
-                Last Name
+                <span>Last Name</span>
 
                 <input
                   name="lastName"
@@ -191,12 +224,14 @@ function CheckoutPage() {
                     formData.customer.lastName
                   }
                   onChange={handleCustomerChange}
+                  placeholder="Enter your last name"
+                  autoComplete="family-name"
                   required
                 />
               </label>
 
               <label>
-                Email
+                <span>Email Address</span>
 
                 <input
                   type="email"
@@ -205,12 +240,14 @@ function CheckoutPage() {
                     formData.customer.email
                   }
                   onChange={handleCustomerChange}
+                  placeholder="you@example.com"
+                  autoComplete="email"
                   required
                 />
               </label>
 
               <label>
-                Phone
+                <span>Phone Number</span>
 
                 <input
                   type="tel"
@@ -219,6 +256,8 @@ function CheckoutPage() {
                     formData.customer.phone
                   }
                   onChange={handleCustomerChange}
+                  placeholder="+91 98765 43210"
+                  autoComplete="tel"
                   required
                 />
               </label>
@@ -226,11 +265,26 @@ function CheckoutPage() {
           </fieldset>
 
           <fieldset>
-            <legend>Shipping Address</legend>
+            <div className="checkout-fieldset-heading">
+              <span className="checkout-section-number">
+                02
+              </span>
+
+              <div>
+                <legend>
+                  Shipping Address
+                </legend>
+
+                <p>
+                  Where should we deliver your
+                  order?
+                </p>
+              </div>
+            </div>
 
             <div className="checkout-grid">
               <label className="checkout-full">
-                Address Line 1
+                <span>Address Line 1</span>
 
                 <input
                   name="addressLine1"
@@ -238,12 +292,17 @@ function CheckoutPage() {
                     formData.shipping.addressLine1
                   }
                   onChange={handleShippingChange}
+                  placeholder="House number and street"
+                  autoComplete="address-line1"
                   required
                 />
               </label>
 
               <label className="checkout-full">
-                Address Line 2
+                <span>
+                  Address Line 2
+                  <small>Optional</small>
+                </span>
 
                 <input
                   name="addressLine2"
@@ -251,33 +310,39 @@ function CheckoutPage() {
                     formData.shipping.addressLine2
                   }
                   onChange={handleShippingChange}
+                  placeholder="Apartment, suite, landmark"
+                  autoComplete="address-line2"
                 />
               </label>
 
               <label>
-                City
+                <span>City</span>
 
                 <input
                   name="city"
                   value={formData.shipping.city}
                   onChange={handleShippingChange}
+                  placeholder="City"
+                  autoComplete="address-level2"
                   required
                 />
               </label>
 
               <label>
-                State
+                <span>State</span>
 
                 <input
                   name="state"
                   value={formData.shipping.state}
                   onChange={handleShippingChange}
+                  placeholder="State"
+                  autoComplete="address-level1"
                   required
                 />
               </label>
 
               <label>
-                Postal Code
+                <span>Postal Code</span>
 
                 <input
                   name="postalCode"
@@ -285,12 +350,14 @@ function CheckoutPage() {
                     formData.shipping.postalCode
                   }
                   onChange={handleShippingChange}
+                  placeholder="Postal code"
+                  autoComplete="postal-code"
                   required
                 />
               </label>
 
               <label>
-                Country
+                <span>Country</span>
 
                 <input
                   name="country"
@@ -298,19 +365,37 @@ function CheckoutPage() {
                     formData.shipping.country
                   }
                   onChange={handleShippingChange}
+                  autoComplete="country-name"
                   required
                 />
               </label>
             </div>
           </fieldset>
 
-          <Button type="submit">
-            Place Order
-          </Button>
+          <div className="checkout-submit">
+            <div>
+              <strong>Ready to place your order?</strong>
+
+              <span>
+                Review your information before
+                continuing.
+              </span>
+            </div>
+
+            <Button type="submit">
+              Place Order →
+            </Button>
+          </div>
         </div>
 
         <aside className="checkout-summary">
-          <h2>Order Summary</h2>
+          <div className="checkout-summary-header">
+            <span className="section-eyebrow">
+              Your Order
+            </span>
+
+            <h2>Order Summary</h2>
+          </div>
 
           <div className="checkout-items">
             {items.map((item) => (
@@ -318,7 +403,11 @@ function CheckoutPage() {
                 key={item.product.id}
                 className="checkout-item"
               >
-                <div>
+                <div className="checkout-item-image">
+                  {item.product.name.charAt(0)}
+                </div>
+
+                <div className="checkout-item-info">
                   <strong>
                     {item.product.name}
                   </strong>
@@ -328,7 +417,7 @@ function CheckoutPage() {
                   </span>
                 </div>
 
-                <strong>
+                <strong className="checkout-item-total">
                   INR{' '}
                   {(
                     item.product.price *
@@ -339,21 +428,54 @@ function CheckoutPage() {
             ))}
           </div>
 
-          <div className="checkout-total">
-            <span>Total Items</span>
+          <div className="checkout-summary-details">
+            <div>
+              <span>Items</span>
+              <strong>{cartCount}</strong>
+            </div>
 
-            <strong>
-              {cartCount}
-            </strong>
+            <div>
+              <span>Subtotal</span>
+
+              <strong>
+                INR{' '}
+                {cartTotal.toLocaleString(
+                  'en-IN',
+                )}
+              </strong>
+            </div>
+
+            <div>
+              <span>Delivery</span>
+
+              <strong className="checkout-free">
+                FREE
+              </strong>
+            </div>
           </div>
 
-          <div className="checkout-total checkout-total-final">
+          <div className="checkout-total">
             <span>Total</span>
 
             <strong>
               INR{' '}
-              {cartTotal.toLocaleString('en-IN')}
+              {cartTotal.toLocaleString(
+                'en-IN',
+              )}
             </strong>
+          </div>
+
+          <div className="checkout-trust">
+            <span>✓</span>
+
+            <div>
+              <strong>Secure checkout</strong>
+
+              <p>
+                Your order information is stored
+                securely on this device.
+              </p>
+            </div>
           </div>
         </aside>
       </form>
