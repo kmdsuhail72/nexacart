@@ -1,127 +1,124 @@
 ﻿import { Link } from 'react-router-dom'
-import ProductCard from '../../components/product/ProductCard'
 import { products } from '../../data/products'
-import { useCart } from '../../hooks/useCart'
 
 function HomePage() {
-  const { addToCart } = useCart()
-
   const featuredProducts = products.slice(0, 3)
-
-  const categories = [
-    {
-      name: 'Electronics',
-      description: 'Smart devices and everyday technology.',
-    },
-    {
-      name: 'Fashion',
-      description: 'Comfortable products for your everyday style.',
-    },
-  ]
 
   return (
     <div className="home-page">
-      <section className="hero-section">
-        <div className="hero-content">
-          <span className="hero-eyebrow">
+      <section className="home-hero">
+        <div className="home-hero-content">
+          <span className="section-eyebrow">
             Welcome to NexaCart
           </span>
 
           <h1>
-            Everything you need.
-            <br />
-            All in one place.
+            Everything you need,
+            <span> delivered simply.</span>
           </h1>
 
           <p>
-            Discover quality products, simple shopping,
-            and a seamless checkout experience.
+            Discover quality products, simple
+            shopping, and a seamless checkout
+            experience designed around you.
           </p>
 
-          <div className="hero-actions">
+          <div className="home-hero-actions">
             <Link
               to="/products"
-              className="button"
+              className="button button-primary"
             >
-              Shop Now
+              Shop Products
             </Link>
 
             <Link
-              to="/products"
+              to="/account"
               className="button button-secondary"
             >
-              Explore Products
+              View Account
             </Link>
           </div>
         </div>
 
         <div
-          className="hero-visual"
+          className="home-hero-visual"
           aria-hidden="true"
         >
-          <div className="hero-card">
+          <div className="home-hero-card">
             <span>Featured</span>
+
             <strong>NexaCart</strong>
-            <p>Modern shopping made simple.</p>
+
+            <p>
+              Modern shopping.
+              <br />
+              Simple checkout.
+            </p>
           </div>
         </div>
       </section>
 
-      <section className="home-section">
-        <div className="section-header">
-          <span className="section-eyebrow">
-            Shop by category
+      <section className="home-benefits">
+        <div>
+          <span className="home-benefit-icon">
+            ✓
           </span>
 
-          <h2>
-            Find what you need
-          </h2>
+          <div>
+            <strong>Quality Products</strong>
 
-          <p>
-            Explore our growing selection of products
-            across popular categories.
-          </p>
+            <p>
+              Carefully selected products for
+              everyday needs.
+            </p>
+          </div>
         </div>
 
-        <div className="category-grid">
-          {categories.map((category) => (
-            <Link
-              key={category.name}
-              to="/products"
-              className="category-card"
-            >
-              <span className="category-icon">
-                {category.name === 'Electronics'
-                  ? '⚡'
-                  : '◈'}
-              </span>
+        <div>
+          <span className="home-benefit-icon">
+            →
+          </span>
 
-              <h3>{category.name}</h3>
+          <div>
+            <strong>Simple Shopping</strong>
 
-              <p>{category.description}</p>
+            <p>
+              Browse, add to cart, and checkout
+              without unnecessary steps.
+            </p>
+          </div>
+        </div>
 
-              <span className="category-link">
-                Browse products →
-              </span>
-            </Link>
-          ))}
+        <div>
+          <span className="home-benefit-icon">
+            🔒
+          </span>
+
+          <div>
+            <strong>Secure Checkout</strong>
+
+            <p>
+              A straightforward checkout flow
+              designed for confidence.
+            </p>
+          </div>
         </div>
       </section>
 
-      <section className="home-section">
-        <div className="section-header section-header-row">
+      <section className="home-products">
+        <div className="home-section-header">
           <div>
             <span className="section-eyebrow">
-              Featured products
+              Featured Collection
             </span>
 
             <h2>
-              Popular picks
+              Popular products
             </h2>
 
             <p>
-              Some of our most popular products,
-              selected for you.
+              Explore some of the products
+              available on NexaCart.
             </p>
           </div>
 
@@ -133,74 +130,72 @@ function HomePage() {
           </Link>
         </div>
 
-        <div className="product-grid">
+        <div className="home-product-grid">
           {featuredProducts.map((product) => (
-            <ProductCard
+            <article
               key={product.id}
-              product={product}
-              onAddToCart={addToCart}
-            />
+              className="home-product-card"
+            >
+              <div className="home-product-image">
+                <span>
+                  {product.category}
+                </span>
+              </div>
+
+              <div className="home-product-content">
+                <span className="product-category">
+                  {product.category}
+                </span>
+
+                <h3>{product.name}</h3>
+
+                <p>
+                  {product.description}
+                </p>
+
+                <div className="home-product-footer">
+                  <strong>
+                    {product.currency}{' '}
+                    {product.price.toLocaleString(
+                      'en-IN',
+                    )}
+                  </strong>
+
+                  <Link
+                    to={`/products/${product.id}`}
+                    className="text-link"
+                  >
+                    View →
+                  </Link>
+                </div>
+              </div>
+            </article>
           ))}
         </div>
       </section>
 
-      <section className="benefits-section">
-        <div className="section-header">
+      <section className="home-cta">
+        <div>
           <span className="section-eyebrow">
-            Why NexaCart?
+            Ready to shop?
           </span>
 
           <h2>
-            Shopping made simple
+            Find something you'll love.
           </h2>
+
+          <p>
+            Browse the complete NexaCart
+            collection and start shopping today.
+          </p>
         </div>
 
-        <div className="benefits-grid">
-          <article className="benefit-card">
-            <span className="benefit-icon">
-              ✓
-            </span>
-
-            <h3>
-              Quality Products
-            </h3>
-
-            <p>
-              Carefully selected products for
-              your everyday needs.
-            </p>
-          </article>
-
-          <article className="benefit-card">
-            <span className="benefit-icon">
-              ⚡
-            </span>
-
-            <h3>
-              Simple Shopping
-            </h3>
-
-            <p>
-              Find products quickly with a
-              straightforward experience.
-            </p>
-          </article>
-
-          <article className="benefit-card">
-            <span className="benefit-icon">
-              🔒
-            </span>
-
-            <h3>
-              Secure Checkout
-            </h3>
-
-            <p>
-              A clean and reliable checkout
-              experience from cart to order.
-            </p>
-          </article>
-        </div>
+        <Link
+          to="/products"
+          className="button button-primary"
+        >
+          Explore Products
+        </Link>
       </section>
     </div>
   )
