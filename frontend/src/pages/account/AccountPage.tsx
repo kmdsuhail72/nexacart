@@ -1,149 +1,136 @@
 ﻿import { Link } from 'react-router-dom'
-import { useMemo } from 'react'
 import { getOrders } from '../../services/orderService'
 
 function AccountPage() {
-  const orders = useMemo(
-    () => getOrders(),
-    [],
-  )
+  const orders = getOrders()
 
-  const sortedOrders = [...orders].sort(
-    (first, second) =>
-      new Date(second.createdAt).getTime() -
-      new Date(first.createdAt).getTime(),
+  const totalSpent = orders.reduce(
+    (total, order) => total + order.totalAmount,
+    0,
   )
 
   return (
     <section className="account-page">
-      <div className="account-hero">
+      <div className="account-header">
         <div>
           <span className="section-eyebrow">
             My Account
           </span>
 
-          <h1>Welcome back</h1>
+          <h1>Welcome back.</h1>
 
           <p>
             Manage your orders and keep track of
             your NexaCart purchases.
           </p>
         </div>
+
+        <Link
+          to="/products"
+          className="button"
+        >
+          Continue Shopping
+        </Link>
       </div>
 
-      <div className="account-layout">
-        <aside className="account-profile-card">
-          <div className="account-profile-avatar">
-            NC
-          </div>
+      <div className="account-stats">
+        <div className="account-stat">
+          <span>Total Orders</span>
+          <strong>{orders.length}</strong>
+        </div>
 
+        <div className="account-stat">
+          <span>Total Items</span>
+
+          <strong>
+            {orders.reduce(
+              (total, order) =>
+                total + order.totalItems,
+              0,
+            )}
+          </strong>
+        </div>
+
+        <div className="account-stat">
+          <span>Total Spent</span>
+
+          <strong>
+            INR {totalSpent.toLocaleString('en-IN')}
+          </strong>
+        </div>
+      </div>
+
+      <section className="account-orders">
+        <div className="account-section-header">
           <div>
-            <span className="account-profile-label">
-              Customer
+            <span className="section-eyebrow">
+              Order History
             </span>
 
-            <h2>NexaCart Customer</h2>
+            <h2>Your Orders</h2>
+          </div>
+
+          <span className="account-order-count">
+            {orders.length}{' '}
+            {orders.length === 1
+              ? 'order'
+              : 'orders'}
+          </span>
+        </div>
+
+        {orders.length === 0 ? (
+          <div className="account-empty">
+            <div className="account-empty-icon">
+              ◎
+            </div>
+
+            <h2>No orders yet</h2>
 
             <p>
-              Your account and order information
-              is stored securely for this demo.
+              Your completed orders will appear
+              here after you place your first order.
             </p>
+
+            <Link
+              to="/products"
+              className="button"
+            >
+              Start Shopping
+            </Link>
           </div>
-
-          <div className="account-profile-divider" />
-
-          <div className="account-stat">
-            <span>Total Orders</span>
-
-            <strong>
-              {sortedOrders.length}
-            </strong>
-          </div>
-        </aside>
-
-        <div className="account-orders-section">
-          <div className="account-orders-heading">
-            <div>
-              <span className="section-eyebrow">
-                Purchase History
-              </span>
-
-              <h2>My Orders</h2>
-            </div>
-
-            {sortedOrders.length > 0 && (
-              <span className="account-order-count">
-                {sortedOrders.length}{' '}
-                {sortedOrders.length === 1
-                  ? 'order'
-                  : 'orders'}
-              </span>
-            )}
-          </div>
-
-          {sortedOrders.length === 0 ? (
-            <div className="account-empty-card">
-              <div className="account-empty-icon">
-                🛍
-              </div>
-
-              <h2>No orders yet</h2>
-
-              <p>
-                Once you place an order, it will
-                appear here.
-              </p>
-
-              <Link
-                to="/products"
-                className="button"
-              >
-                Start Shopping
-              </Link>
-            </div>
-          ) : (
-            <div className="account-order-list">
-              {sortedOrders.map((order) => (
+        ) : (
+          <div className="account-order-list">
+            {orders
+              .slice()
+              .reverse()
+              .map((order) => (
                 <article
                   key={order.id}
                   className="account-order-card"
                 >
-                  <div className="account-order-top">
+                  <div className="account-order-main">
+                    <div className="account-order-icon">
+                      #
+                    </div>
+
                     <div>
                       <span className="account-order-label">
                         Order ID
                       </span>
 
-                      <h3>{order.id}</h3>
-                    </div>
-
-                    <span
-                      className={`order-status order-status-${order.status.toLowerCase()}`}
-                    >
-                      <span className="order-status-dot" />
-
-                      {order.status}
-                    </span>
-                  </div>
-
-                  <div className="account-order-info">
-                    <div>
-                      <span>Date</span>
-
                       <strong>
+                        {order.id}
+                      </strong>
+
+                      <small>
                         {new Date(
                           order.createdAt,
-                        ).toLocaleDateString(
-                          'en-IN',
-                          {
-                            day: '2-digit',
-                            month: 'short',
-                            year: 'numeric',
-                          },
-                        )}
-                      </strong>
+                        ).toLocaleString('en-IN')}
+                      </small>
                     </div>
+                  </div>
 
+                  <div className="account-order-meta">
                     <div>
                       <span>Items</span>
 
@@ -162,35 +149,27 @@ function AccountPage() {
                         )}
                       </strong>
                     </div>
+
+                    <div>
+                      <span>Status</span>
+
+                      <strong className="account-order-status">
+                        {order.status}
+                      </strong>
+                    </div>
                   </div>
 
-                  <div className="account-order-bottom">
-                    <span className="account-order-products">
-                      {order.items
-                        .slice(0, 2)
-                        .map(
-                          (item) =>
-                            item.product.name,
-                        )
-                        .join(', ')}
-
-                      {order.items.length > 2 &&
-                        ` +${order.items.length - 2} more`}
-                    </span>
-
-                    <Link
-                      to={`/account/orders/${order.id}`}
-                      className="button button-secondary"
-                    >
-                      View Details
-                    </Link>
-                  </div>
+                  <Link
+                    to={`/account/orders/${order.id}`}
+                    className="account-order-link"
+                  >
+                    View Details →
+                  </Link>
                 </article>
               ))}
-            </div>
-          )}
-        </div>
-      </div>
+          </div>
+        )}
+      </section>
     </section>
   )
 }
