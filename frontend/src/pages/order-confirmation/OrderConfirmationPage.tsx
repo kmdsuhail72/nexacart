@@ -10,103 +10,101 @@ function OrderConfirmationPage() {
 
   if (!order) {
     return (
-      <section className="order-result order-result-error">
-        <div className="order-result-icon">
-          !
-        </div>
-
+      <section className="order-confirmation-page">
         <span className="section-eyebrow">
           Order
         </span>
 
-        <h1>Order Not Found</h1>
+        <div className="confirmation-card">
+          <div className="confirmation-icon">
+            !
+          </div>
 
-        <p>
-          We could not find the requested order.
-          It may have been removed from this device.
-        </p>
+          <h1>Order Not Found</h1>
 
-        <Link
-          to="/products"
-          className="button"
-        >
-          Continue Shopping
-        </Link>
+          <p>
+            We could not find the order you are
+            looking for.
+          </p>
+
+          <Link
+            to="/account"
+            className="button"
+          >
+            View My Orders
+          </Link>
+        </div>
       </section>
     )
   }
 
   return (
-    <section className="order-result">
-      <div className="order-success-icon">
-        ✓
-      </div>
+    <section className="order-confirmation-page">
+      <div className="confirmation-card">
+        <div className="confirmation-icon">
+          ✓
+        </div>
 
-      <span className="section-eyebrow">
-        Order Confirmed
-      </span>
+        <span className="section-eyebrow">
+          Order Confirmed
+        </span>
 
-      <h1>Thank you for your order.</h1>
+        <h1>Thank you for your order!</h1>
 
-      <p className="order-result-message">
-        Your NexaCart order has been received
-        successfully. We've saved the order details
-        on this device.
-      </p>
+        <p>
+          Your order has been received successfully.
+          We have saved your order details for future
+          reference.
+        </p>
 
-      <div className="order-confirmation-card">
-        <div>
+        <div className="confirmation-order">
           <span>Order ID</span>
 
           <strong>{order.id}</strong>
         </div>
 
-        <div>
-          <span>Status</span>
+        <div className="confirmation-meta">
+          <div>
+            <span>Items</span>
+            <strong>{order.totalItems}</strong>
+          </div>
 
-          <strong className="order-status">
-            {order.status}
-          </strong>
+          <div>
+            <span>Total</span>
+
+            <strong>
+              INR{' '}
+              {order.totalAmount.toLocaleString(
+                'en-IN',
+              )}
+            </strong>
+          </div>
+
+          <div>
+            <span>Status</span>
+
+            <strong className="order-status">
+              {order.status}
+            </strong>
+          </div>
         </div>
 
-        <div>
-          <span>Total Items</span>
+        <div className="confirmation-actions">
+          <Link
+            to={`/account/orders/${order.id}`}
+            className="button"
+          >
+            View Order Details
+          </Link>
 
-          <strong>{order.totalItems}</strong>
-        </div>
-
-        <div>
-          <span>Total Amount</span>
-
-          <strong>
-            INR{' '}
-            {order.totalAmount.toLocaleString(
-              'en-IN',
-            )}
-          </strong>
+          <Link
+            to="/products"
+            className="button button-secondary"
+          >
+            Continue Shopping
+          </Link>
         </div>
       </div>
-
-      <div className="order-result-actions">
-        <Link
-          to={`/account/orders/${order.id}`}
-          className="button"
-        >
-          View Order Details
-        </Link>
-
-        <Link
-          to="/products"
-          className="button button-secondary"
-        >
-          Continue Shopping
-        </Link>
-      </div>
-
-      <p className="order-result-note">
-        Keep your order ID for reference:
-        <strong> {order.id}</strong>
-      </p>
     </section>
   )
 }

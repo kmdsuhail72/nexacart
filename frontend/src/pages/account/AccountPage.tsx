@@ -5,7 +5,14 @@ function AccountPage() {
   const orders = getOrders()
 
   const totalSpent = orders.reduce(
-    (total, order) => total + order.totalAmount,
+    (total, order) =>
+      total + order.totalAmount,
+    0,
+  )
+
+  const totalItems = orders.reduce(
+    (total, order) =>
+      total + order.totalItems,
     0,
   )
 
@@ -17,11 +24,11 @@ function AccountPage() {
             My Account
           </span>
 
-          <h1>Welcome back.</h1>
+          <h1>Welcome back</h1>
 
           <p>
-            Manage your orders and keep track of
-            your NexaCart purchases.
+            Manage your NexaCart orders and review
+            your purchase history.
           </p>
         </div>
 
@@ -34,43 +41,36 @@ function AccountPage() {
       </div>
 
       <div className="account-stats">
-        <div className="account-stat">
-          <span>Total Orders</span>
+        <article>
+          <span>Orders</span>
           <strong>{orders.length}</strong>
-        </div>
+        </article>
 
-        <div className="account-stat">
-          <span>Total Items</span>
+        <article>
+          <span>Items Purchased</span>
+          <strong>{totalItems}</strong>
+        </article>
 
-          <strong>
-            {orders.reduce(
-              (total, order) =>
-                total + order.totalItems,
-              0,
-            )}
-          </strong>
-        </div>
-
-        <div className="account-stat">
+        <article>
           <span>Total Spent</span>
 
           <strong>
             INR {totalSpent.toLocaleString('en-IN')}
           </strong>
-        </div>
+        </article>
       </div>
 
-      <section className="account-orders">
+      <div className="account-orders">
         <div className="account-section-header">
           <div>
             <span className="section-eyebrow">
-              Order History
+              Purchase History
             </span>
 
             <h2>Your Orders</h2>
           </div>
 
-          <span className="account-order-count">
+          <span>
             {orders.length}{' '}
             {orders.length === 1
               ? 'order'
@@ -81,14 +81,14 @@ function AccountPage() {
         {orders.length === 0 ? (
           <div className="account-empty">
             <div className="account-empty-icon">
-              ◎
+              📦
             </div>
 
             <h2>No orders yet</h2>
 
             <p>
-              Your completed orders will appear
-              here after you place your first order.
+              Your completed purchases will appear
+              here.
             </p>
 
             <Link
@@ -99,48 +99,53 @@ function AccountPage() {
             </Link>
           </div>
         ) : (
-          <div className="account-order-list">
-            {orders
-              .slice()
+          <div className="order-list">
+            {[...orders]
               .reverse()
               .map((order) => (
                 <article
                   key={order.id}
-                  className="account-order-card"
+                  className="order-card"
                 >
-                  <div className="account-order-main">
-                    <div className="account-order-icon">
-                      #
-                    </div>
-
+                  <div className="order-card-main">
                     <div>
-                      <span className="account-order-label">
+                      <span className="order-label">
                         Order ID
                       </span>
 
                       <strong>
                         {order.id}
                       </strong>
+                    </div>
 
-                      <small>
+                    <div>
+                      <span className="order-label">
+                        Date
+                      </span>
+
+                      <span>
                         {new Date(
                           order.createdAt,
-                        ).toLocaleString('en-IN')}
-                      </small>
+                        ).toLocaleDateString(
+                          'en-IN',
+                        )}
+                      </span>
                     </div>
-                  </div>
 
-                  <div className="account-order-meta">
                     <div>
-                      <span>Items</span>
+                      <span className="order-label">
+                        Items
+                      </span>
 
-                      <strong>
+                      <span>
                         {order.totalItems}
-                      </strong>
+                      </span>
                     </div>
 
                     <div>
-                      <span>Total</span>
+                      <span className="order-label">
+                        Total
+                      </span>
 
                       <strong>
                         INR{' '}
@@ -149,27 +154,25 @@ function AccountPage() {
                         )}
                       </strong>
                     </div>
-
-                    <div>
-                      <span>Status</span>
-
-                      <strong className="account-order-status">
-                        {order.status}
-                      </strong>
-                    </div>
                   </div>
 
-                  <Link
-                    to={`/account/orders/${order.id}`}
-                    className="account-order-link"
-                  >
-                    View Details →
-                  </Link>
+                  <div className="order-card-action">
+                    <span className="order-status">
+                      {order.status}
+                    </span>
+
+                    <Link
+                      to={`/account/orders/${order.id}`}
+                      className="button button-secondary"
+                    >
+                      View Details
+                    </Link>
+                  </div>
                 </article>
               ))}
           </div>
         )}
-      </section>
+      </div>
     </section>
   )
 }
