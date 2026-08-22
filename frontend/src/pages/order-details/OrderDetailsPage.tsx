@@ -10,111 +10,282 @@ function OrderDetailsPage() {
 
   if (!order) {
     return (
-      <section>
-        <h1>Order Not Found</h1>
+      <section className="order-details-page">
+        <div className="order-details-not-found">
+          <span className="section-eyebrow">
+            Order
+          </span>
 
-        <p>
-          We could not find the requested order.
-        </p>
+          <h1>Order Not Found</h1>
 
-        <Link to="/account">
-          Back to My Orders
-        </Link>
+          <p>
+            We could not find the order you are
+            looking for.
+          </p>
+
+          <Link
+            to="/account"
+            className="button"
+          >
+            Back to My Orders
+          </Link>
+        </div>
       </section>
     )
   }
 
+  const orderDate = new Date(
+    order.createdAt,
+  ).toLocaleDateString('en-IN', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+  })
+
   return (
-    <section>
-      <div>
-        <Link to="/account">
+    <section className="order-details-page">
+      <div className="order-details-header">
+        <Link
+          to="/account"
+          className="back-link"
+        >
           ← Back to My Orders
         </Link>
 
-        <h1>Order Details</h1>
+        <div className="order-details-heading">
+          <div>
+            <span className="section-eyebrow">
+              Order Details
+            </span>
 
-        <p>
-          Order ID: <strong>{order.id}</strong>
-        </p>
-
-        <p>
-          Date:{' '}
-          {new Date(order.createdAt).toLocaleString('en-IN')}
-        </p>
-
-        <p>
-          Status: {order.status}
-        </p>
-      </div>
-
-      <div>
-        <h2>Customer</h2>
-
-        <p>
-          {order.customer.firstName}{' '}
-          {order.customer.lastName}
-        </p>
-
-        <p>{order.customer.email}</p>
-
-        <p>{order.customer.phone}</p>
-      </div>
-
-      <div>
-        <h2>Shipping Address</h2>
-
-        <p>{order.shipping.addressLine1}</p>
-
-        {order.shipping.addressLine2 && (
-          <p>{order.shipping.addressLine2}</p>
-        )}
-
-        <p>
-          {order.shipping.city},{' '}
-          {order.shipping.state}{' '}
-          {order.shipping.postalCode}
-        </p>
-
-        <p>{order.shipping.country}</p>
-      </div>
-
-      <div>
-        <h2>Items</h2>
-
-        {order.items.map((item) => (
-          <article key={item.product.id}>
-            <h3>{item.product.name}</h3>
+            <h1>{order.id}</h1>
 
             <p>
-              Quantity: {item.quantity}
+              Placed on {orderDate}
             </p>
+          </div>
 
-            <p>
-              Price: INR{' '}
-              {item.product.price.toLocaleString('en-IN')}
-            </p>
+          <span
+            className={`order-status order-status-${order.status.toLowerCase()}`}
+          >
+            <span className="order-status-dot" />
 
-            <p>
-              Item Total: INR{' '}
-              {(item.product.price * item.quantity)
-                .toLocaleString('en-IN')}
-            </p>
-          </article>
-        ))}
+            {order.status}
+          </span>
+        </div>
       </div>
 
-      <aside>
-        <h2>Order Summary</h2>
+      <div className="order-details-layout">
+        <div className="order-details-main">
+          <div className="order-details-card">
+            <div className="order-details-card-header">
+              <div>
+                <span className="section-eyebrow">
+                  Customer
+                </span>
 
-        <p>
-          Total Items: {order.totalItems}
-        </p>
+                <h2>Customer Information</h2>
+              </div>
+            </div>
 
-        <p>
-          Total: INR{' '}
-          {order.totalAmount.toLocaleString('en-IN')}
-        </p>
-      </aside>
+            <div className="order-details-information">
+              <div>
+                <span>Name</span>
+
+                <strong>
+                  {order.customer.firstName}{' '}
+                  {order.customer.lastName}
+                </strong>
+              </div>
+
+              <div>
+                <span>Email</span>
+
+                <strong>
+                  {order.customer.email}
+                </strong>
+              </div>
+
+              <div>
+                <span>Phone</span>
+
+                <strong>
+                  {order.customer.phone}
+                </strong>
+              </div>
+            </div>
+          </div>
+
+          <div className="order-details-card">
+            <div className="order-details-card-header">
+              <div>
+                <span className="section-eyebrow">
+                  Delivery
+                </span>
+
+                <h2>Shipping Address</h2>
+              </div>
+            </div>
+
+            <div className="shipping-address">
+              <strong>
+                {order.customer.firstName}{' '}
+                {order.customer.lastName}
+              </strong>
+
+              <p>
+                {order.shipping.addressLine1}
+              </p>
+
+              {order.shipping.addressLine2 && (
+                <p>
+                  {order.shipping.addressLine2}
+                </p>
+              )}
+
+              <p>
+                {order.shipping.city},{' '}
+                {order.shipping.state}{' '}
+                {order.shipping.postalCode}
+              </p>
+
+              <p>
+                {order.shipping.country}
+              </p>
+            </div>
+          </div>
+
+          <div className="order-details-card">
+            <div className="order-details-card-header">
+              <div>
+                <span className="section-eyebrow">
+                  Purchase
+                </span>
+
+                <h2>Order Items</h2>
+              </div>
+
+              <span className="order-item-count">
+                {order.totalItems}{' '}
+                {order.totalItems === 1
+                  ? 'item'
+                  : 'items'}
+              </span>
+            </div>
+
+            <div className="order-items-list">
+              {order.items.map((item) => (
+                <article
+                  key={item.product.id}
+                  className="order-details-item"
+                >
+                  <div className="order-item-visual">
+                    {item.product.name
+                      .charAt(0)
+                      .toUpperCase()}
+                  </div>
+
+                  <div className="order-item-content">
+                    <h3>
+                      {item.product.name}
+                    </h3>
+
+                    <p>
+                      {item.product.category}
+                    </p>
+
+                    <span>
+                      Qty: {item.quantity}
+                    </span>
+                  </div>
+
+                  <div className="order-item-pricing">
+                    <span>
+                      INR{' '}
+                      {item.product.price.toLocaleString(
+                        'en-IN',
+                      )}{' '}
+                      × {item.quantity}
+                    </span>
+
+                    <strong>
+                      INR{' '}
+                      {(
+                        item.product.price *
+                        item.quantity
+                      ).toLocaleString('en-IN')}
+                    </strong>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <aside className="order-details-summary">
+          <div className="order-summary-card">
+            <span className="section-eyebrow">
+              Summary
+            </span>
+
+            <h2>Order Summary</h2>
+
+            <div className="order-summary-row">
+              <span>Total Items</span>
+
+              <strong>
+                {order.totalItems}
+              </strong>
+            </div>
+
+            <div className="order-summary-row">
+              <span>Subtotal</span>
+
+              <strong>
+                INR{' '}
+                {order.totalAmount.toLocaleString(
+                  'en-IN',
+                )}
+              </strong>
+            </div>
+
+            <div className="order-summary-divider" />
+
+            <div className="order-summary-total">
+              <span>Total</span>
+
+              <strong>
+                INR{' '}
+                {order.totalAmount.toLocaleString(
+                  'en-IN',
+                )}
+              </strong>
+            </div>
+
+            <div className="order-summary-confirmed">
+              <span className="order-status-dot" />
+
+              <div>
+                <strong>
+                  Order confirmed
+                </strong>
+
+                <span>
+                  Your order has been received
+                  successfully.
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <Link
+            to="/products"
+            className="button button-secondary order-continue-button"
+          >
+            Continue Shopping
+          </Link>
+        </aside>
+      </div>
     </section>
   )
 }
