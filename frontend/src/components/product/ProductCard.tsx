@@ -7,38 +7,79 @@ interface ProductCardProps {
   onAddToCart: (product: Product) => void
 }
 
-function ProductCard({ product, onAddToCart }: ProductCardProps) {
+function ProductCard({
+  product,
+  onAddToCart,
+}: ProductCardProps) {
   const isOutOfStock = product.stock === 0
 
   return (
-    <article>
-      <div>
-        <span>{product.category}</span>
+    <article className="product-card">
+      <Link
+        to={`/products/${product.id}`}
+        className="product-image"
+        aria-label={`View ${product.name}`}
+      >
+        <div className="product-image-placeholder">
+          <span>
+            {product.category === 'Electronics'
+              ? '⚡'
+              : '◈'}
+          </span>
+        </div>
+      </Link>
 
-        <h2>{product.name}</h2>
+      <div className="product-card-content">
+        <div className="product-card-top">
+          <span className="product-category">
+            {product.category}
+          </span>
 
-        <p>{product.description}</p>
+          {isOutOfStock && (
+            <span className="stock-badge out">
+              Out of stock
+            </span>
+          )}
+        </div>
 
-        <p>
-          {product.currency} {product.price.toLocaleString('en-IN')}
+        <Link
+          to={`/products/${product.id}`}
+          className="product-name"
+        >
+          <h2>{product.name}</h2>
+        </Link>
+
+        <p className="product-description">
+          {product.description}
         </p>
 
-        <p>
-          {isOutOfStock
-            ? 'Out of stock'
-            : `${product.stock} items available`}
-        </p>
+        <div className="product-card-bottom">
+          <div>
+            <span className="product-price">
+              {product.currency}{' '}
+              {product.price.toLocaleString('en-IN')}
+            </span>
 
-        <div>
-          <Link to={`/products/${product.id}`}>
-            View Details
-          </Link>
+            <span
+              className={
+                isOutOfStock
+                  ? 'stock-text out'
+                  : 'stock-text'
+              }
+            >
+              {isOutOfStock
+                ? 'Currently unavailable'
+                : `${product.stock} available`}
+            </span>
+          </div>
 
           <Button
             disabled={isOutOfStock}
             onClick={() => onAddToCart(product)}
           >
-            {isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
+            {isOutOfStock
+              ? 'Unavailable'
+              : 'Add to Cart'}
           </Button>
         </div>
       </div>
