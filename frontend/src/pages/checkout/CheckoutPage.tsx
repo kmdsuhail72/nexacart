@@ -4,6 +4,7 @@ import type {
   FormEvent,
 } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+
 import Button from '../../components/ui/Button'
 import { useCart } from '../../hooks/useCart'
 import { createOrder } from '../../services/orderService'
@@ -38,16 +39,18 @@ function CheckoutPage() {
     })
 
   const [error, setError] = useState('')
+  const [isSubmitting, setIsSubmitting] =
+    useState(false)
 
   if (items.length === 0) {
     return (
       <section className="checkout-empty">
         <span className="section-eyebrow">
-          Secure Checkout
+          Checkout
         </span>
 
         <div className="checkout-empty-icon">
-          ✓
+          🛒
         </div>
 
         <h1>Your cart is empty</h1>
@@ -99,12 +102,41 @@ function CheckoutPage() {
     event: FormEvent<HTMLFormElement>,
   ) {
     event.preventDefault()
+
     setError('')
 
-    const orderId =
-      `ORD-${Date.now().toString(36).toUpperCase()}`
+    const email = formData.customer.email.trim()
+    const phone = formData.customer.phone.trim()
+    const postalCode =
+      formData.shipping.postalCode.trim()
+
+    if (!email.includes('@')) {
+      setError(
+        'Please enter a valid email address.',
+      )
+      return
+    }
+
+    if (!/^[0-9+\-\s]{10,15}$/.test(phone)) {
+      setError(
+        'Please enter a valid phone number.',
+      )
+      return
+    }
+
+    if (!/^[0-9]{5,10}$/.test(postalCode)) {
+      setError(
+        'Please enter a valid postal code.',
+      )
+      return
+    }
+
+    setIsSubmitting(true)
 
     try {
+      const orderId =
+        `ORD-${Date.now().toString(36).toUpperCase()}`
+
       createOrder({
         id: orderId,
         createdAt: new Date().toISOString(),
@@ -125,6 +157,8 @@ function CheckoutPage() {
       setError(
         'Unable to place your order. Please try again.',
       )
+
+      setIsSubmitting(false)
     }
   }
 
@@ -138,32 +172,16 @@ function CheckoutPage() {
           ← Back to Cart
         </Link>
 
-        <div className="checkout-heading">
-          <span className="section-eyebrow">
-            Secure Checkout
-          </span>
+        <span className="section-eyebrow">
+          Secure Checkout
+        </span>
 
-          <h1>Complete Your Order</h1>
+        <h1>Complete Your Order</h1>
 
-          <p>
-            Enter your delivery information to
-            place your NexaCart order.
-          </p>
-        </div>
-
-        <div className="checkout-progress">
-          <div className="checkout-step checkout-step-active">
-            <span>1</span>
-            <strong>Details</strong>
-          </div>
-
-          <div className="checkout-progress-line" />
-
-          <div className="checkout-step">
-            <span>2</span>
-            <strong>Confirmation</strong>
-          </div>
-        </div>
+        <p>
+          Enter your delivery information and
+          review your order before placing it.
+        </p>
       </div>
 
       {error && (
@@ -171,7 +189,7 @@ function CheckoutPage() {
           className="checkout-error"
           role="alert"
         >
-          <strong>Something went wrong.</strong>
+          <strong>Unable to continue</strong>
           <span>{error}</span>
         </div>
       )}
@@ -182,22 +200,10 @@ function CheckoutPage() {
       >
         <div className="checkout-form">
           <fieldset>
-            <div className="checkout-fieldset-heading">
-              <span className="checkout-section-number">
-                01
-              </span>
-
-              <div>
-                <legend>
-                  Customer Information
-                </legend>
-
-                <p>
-                  Tell us how we can contact you
-                  about your order.
-                </p>
-              </div>
-            </div>
+            <legend>
+              <span>01</span>
+              Customer Information
+            </legend>
 
             <div className="checkout-grid">
               <label>
@@ -209,7 +215,7 @@ function CheckoutPage() {
                     formData.customer.firstName
                   }
                   onChange={handleCustomerChange}
-                  placeholder="Enter your first name"
+                  placeholder="Enter first name"
                   autoComplete="given-name"
                   required
                 />
@@ -224,7 +230,7 @@ function CheckoutPage() {
                     formData.customer.lastName
                   }
                   onChange={handleCustomerChange}
-                  placeholder="Enter your last name"
+                  placeholder="Enter last name"
                   autoComplete="family-name"
                   required
                 />
@@ -265,22 +271,10 @@ function CheckoutPage() {
           </fieldset>
 
           <fieldset>
-            <div className="checkout-fieldset-heading">
-              <span className="checkout-section-number">
-                02
-              </span>
-
-              <div>
-                <legend>
-                  Shipping Address
-                </legend>
-
-                <p>
-                  Where should we deliver your
-                  order?
-                </p>
-              </div>
-            </div>
+            <legend>
+              <span>02</span>
+              Shipping Address
+            </legend>
 
             <div className="checkout-grid">
               <label className="checkout-full">
@@ -292,17 +286,14 @@ function CheckoutPage() {
                     formData.shipping.addressLine1
                   }
                   onChange={handleShippingChange}
-                  placeholder="House number and street"
+                  placeholder="House / building / street"
                   autoComplete="address-line1"
                   required
                 />
               </label>
 
               <label className="checkout-full">
-                <span>
-                  Address Line 2
-                  <small>Optional</small>
-                </span>
+                <span>Address Line 2</span>
 
                 <input
                   name="addressLine2"
@@ -310,7 +301,7 @@ function CheckoutPage() {
                     formData.shipping.addressLine2
                   }
                   onChange={handleShippingChange}
-                  placeholder="Apartment, suite, landmark"
+                  placeholder="Apartment, landmark, etc. (optional)"
                   autoComplete="address-line2"
                 />
               </label>
@@ -320,7 +311,9 @@ function CheckoutPage() {
 
                 <input
                   name="city"
-                  value={formData.shipping.city}
+                  value={
+                    formData.shipping.city
+                  }
                   onChange={handleShippingChange}
                   placeholder="City"
                   autoComplete="address-level2"
@@ -333,7 +326,9 @@ function CheckoutPage() {
 
                 <input
                   name="state"
-                  value={formData.shipping.state}
+                  value={
+                    formData.shipping.state
+                  }
                   onChange={handleShippingChange}
                   placeholder="State"
                   autoComplete="address-level1"
@@ -350,7 +345,8 @@ function CheckoutPage() {
                     formData.shipping.postalCode
                   }
                   onChange={handleShippingChange}
-                  placeholder="Postal code"
+                  placeholder="560001"
+                  inputMode="numeric"
                   autoComplete="postal-code"
                   required
                 />
@@ -373,18 +369,20 @@ function CheckoutPage() {
           </fieldset>
 
           <div className="checkout-submit">
-            <div>
-              <strong>Ready to place your order?</strong>
-
-              <span>
-                Review your information before
-                continuing.
-              </span>
-            </div>
-
-            <Button type="submit">
-              Place Order →
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+            >
+              {isSubmitting
+                ? 'Placing Order...'
+                : 'Place Order'}
             </Button>
+
+            <p>
+              By placing your order, you confirm
+              that the information provided is
+              correct.
+            </p>
           </div>
         </div>
 
@@ -403,10 +401,6 @@ function CheckoutPage() {
                 key={item.product.id}
                 className="checkout-item"
               >
-                <div className="checkout-item-image">
-                  {item.product.name.charAt(0)}
-                </div>
-
                 <div className="checkout-item-info">
                   <strong>
                     {item.product.name}
@@ -417,7 +411,7 @@ function CheckoutPage() {
                   </span>
                 </div>
 
-                <strong className="checkout-item-total">
+                <strong>
                   INR{' '}
                   {(
                     item.product.price *
@@ -428,7 +422,7 @@ function CheckoutPage() {
             ))}
           </div>
 
-          <div className="checkout-summary-details">
+          <div className="checkout-summary-lines">
             <div>
               <span>Items</span>
               <strong>{cartCount}</strong>
@@ -436,46 +430,27 @@ function CheckoutPage() {
 
             <div>
               <span>Subtotal</span>
-
               <strong>
                 INR{' '}
-                {cartTotal.toLocaleString(
-                  'en-IN',
-                )}
+                {cartTotal.toLocaleString('en-IN')}
               </strong>
             </div>
 
             <div>
               <span>Delivery</span>
-
               <strong className="checkout-free">
                 FREE
               </strong>
             </div>
           </div>
 
-          <div className="checkout-total">
+          <div className="checkout-total checkout-total-final">
             <span>Total</span>
 
             <strong>
               INR{' '}
-              {cartTotal.toLocaleString(
-                'en-IN',
-              )}
+              {cartTotal.toLocaleString('en-IN')}
             </strong>
-          </div>
-
-          <div className="checkout-trust">
-            <span>✓</span>
-
-            <div>
-              <strong>Secure checkout</strong>
-
-              <p>
-                Your order information is stored
-                securely on this device.
-              </p>
-            </div>
           </div>
         </aside>
       </form>
