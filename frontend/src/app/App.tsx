@@ -1,6 +1,7 @@
 ﻿import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import MainLayout from '../components/layout/MainLayout'
 import { CartProvider } from '../context/CartContext'
+
 import HomePage from '../pages/home/HomePage'
 import ProductsPage from '../pages/products/ProductsPage'
 import ProductDetailsPage from '../pages/product-details/ProductDetailsPage'
@@ -48,13 +49,13 @@ function App() {
             />
 
             <Route
-              path="/order-details/:orderId"
-              element={<OrderDetailsPage />}
+              path="/account"
+              element={<AccountPage />}
             />
 
             <Route
-              path="/account"
-              element={<AccountPage />}
+              path="/account/orders/:orderId"
+              element={<OrderDetailsPage />}
             />
 
             <Route
