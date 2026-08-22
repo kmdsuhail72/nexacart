@@ -1,13 +1,13 @@
-﻿import { useState } from 'react'
-import { Link, NavLink } from 'react-router-dom'
+﻿import { NavLink, Link } from 'react-router-dom'
+import { useState } from 'react'
 import { useCart } from '../../hooks/useCart'
 
 function Header() {
   const { cartCount } = useCart()
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
 
-  function closeMenu() {
-    setIsMenuOpen(false)
+  function closeMobileMenu() {
+    setMobileOpen(false)
   }
 
   return (
@@ -17,7 +17,7 @@ function Header() {
           to="/"
           className="site-logo"
           aria-label="NexaCart home"
-          onClick={closeMenu}
+          onClick={closeMobileMenu}
         >
           <span className="site-logo-mark">N</span>
 
@@ -28,61 +28,112 @@ function Header() {
 
         <nav
           className={`site-nav ${
-            isMenuOpen ? 'site-nav-open' : ''
+            mobileOpen ? 'site-nav-open' : ''
           }`}
           aria-label="Primary navigation"
         >
           <NavLink
             to="/"
             end
-            onClick={closeMenu}
+            className={({ isActive }) =>
+              isActive
+                ? 'nav-link nav-link-active'
+                : 'nav-link'
+            }
+            onClick={closeMobileMenu}
           >
             Home
           </NavLink>
 
           <NavLink
             to="/products"
-            onClick={closeMenu}
+            className={({ isActive }) =>
+              isActive
+                ? 'nav-link nav-link-active'
+                : 'nav-link'
+            }
+            onClick={closeMobileMenu}
           >
             Products
           </NavLink>
 
           <NavLink
             to="/account"
-            onClick={closeMenu}
+            className={({ isActive }) =>
+              isActive
+                ? 'nav-link nav-link-active'
+                : 'nav-link'
+            }
+            onClick={closeMobileMenu}
           >
             Account
           </NavLink>
 
           <NavLink
             to="/cart"
-            className="site-nav-cart"
-            onClick={closeMenu}
+            className={({ isActive }) =>
+              isActive
+                ? 'nav-link nav-link-cart nav-link-active'
+                : 'nav-link nav-link-cart'
+            }
+            onClick={closeMobileMenu}
           >
             <span>Cart</span>
 
             {cartCount > 0 && (
               <span
-                className="cart-count"
+                className="cart-badge"
                 aria-label={`${cartCount} items in cart`}
               >
-                {cartCount}
+                {cartCount > 99
+                  ? '99+'
+                  : cartCount}
               </span>
             )}
           </NavLink>
         </nav>
 
+        <div className="site-header-actions">
+          <Link
+            to="/account"
+            className="header-account-link"
+            aria-label="My Account"
+          >
+            <span className="header-account-icon">
+              ♙
+            </span>
+
+            <span>Account</span>
+          </Link>
+
+          <Link
+            to="/cart"
+            className="header-cart-link"
+            aria-label={`Shopping cart with ${cartCount} items`}
+          >
+            <span>Cart</span>
+
+            {cartCount > 0 && (
+              <span className="cart-badge">
+                {cartCount > 99
+                  ? '99+'
+                  : cartCount}
+              </span>
+            )}
+          </Link>
+        </div>
+
         <button
           type="button"
           className="mobile-menu-button"
           aria-label={
-            isMenuOpen
-              ? 'Close navigation menu'
-              : 'Open navigation menu'
+            mobileOpen
+              ? 'Close navigation'
+              : 'Open navigation'
           }
-          aria-expanded={isMenuOpen}
+          aria-expanded={mobileOpen}
           onClick={() =>
-            setIsMenuOpen((current) => !current)
+            setMobileOpen((current) => !current)
           }
         >
           <span />
